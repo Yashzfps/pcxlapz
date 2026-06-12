@@ -1,0 +1,2 @@
+"""Rias assistant modules package."""
+
