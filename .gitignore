@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.env
+data/usage.sqlite3
+data/rias.log
+data/email_history.json

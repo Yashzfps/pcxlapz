@@ -1,0 +1,6 @@
+{
+  "welcome": {
+    "subject": "Welcome {name}",
+    "body": "Hi {name},\n\nWelcome to Rias local assistant.\n"
+  }
+}
