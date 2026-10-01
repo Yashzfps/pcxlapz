@@ -4,11 +4,11 @@ from modules.personality import error, greeting, info, style, success
 
 
 class TestPersonality(unittest.TestCase):
-    def test_greeting_has_rias_name(self):
-        self.assertIn("Rias", greeting())
+    def test_greeting_has_aura_name(self):
+        self.assertIn("AURA", greeting())
 
     def test_style_prefixes_text(self):
-        self.assertTrue(style("Hello").startswith("Rias ✨:"))
+        self.assertTrue(style("Hello").startswith("AURA:"))
 
     def test_success_error_info_wrappers(self):
         self.assertIn("Done", success("Done"))
