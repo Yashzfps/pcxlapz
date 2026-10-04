@@ -3,11 +3,18 @@ from email.mime.text import MIMEText
 from pathlib import Path
 from typing import Optional, Tuple
 
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
+try:
+    from google.auth.transport.requests import Request
+    from google.oauth2.credentials import Credentials
+    from google_auth_oauthlib.flow import InstalledAppFlow
+    from googleapiclient.discovery import build
+    from googleapiclient.errors import HttpError
+except Exception:  # pragma: no cover - dependency availability is environment-specific
+    Request = None  # type: ignore[assignment]
+    Credentials = None  # type: ignore[assignment]
+    InstalledAppFlow = None  # type: ignore[assignment]
+    build = None  # type: ignore[assignment]
+    HttpError = Exception
 
 from config import GMAIL_CREDENTIALS_FILE, GMAIL_SCOPES, GMAIL_TOKEN_FILE
 
@@ -22,6 +29,8 @@ class GmailHandler:
         self.token_file = token_file
 
     def _get_credentials(self) -> Optional[Credentials]:
+        if not all([Request, Credentials, InstalledAppFlow]):
+            return None
         creds: Optional[Credentials] = None
 
         if self.token_file.exists():
@@ -50,6 +59,9 @@ class GmailHandler:
     def send_email(self, to_email: str, subject: str, message_text: str) -> Tuple[bool, str]:
         if not to_email.strip() or not subject.strip() or not message_text.strip():
             return False, "Recipient, subject, and message are all required."
+
+        if build is None:
+            return False, "Gmail dependencies are not installed. Run: pip install -r requirements.txt"
 
         creds = self._get_credentials()
         if not creds:

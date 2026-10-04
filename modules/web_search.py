@@ -1,11 +1,16 @@
 from typing import List
 
-from duckduckgo_search import DDGS
+try:
+    from duckduckgo_search import DDGS
+except Exception:  # pragma: no cover - dependency availability is environment-specific
+    DDGS = None  # type: ignore[assignment]
 
 from config import WEB_SEARCH_MAX_RESULTS, WEB_SEARCH_SNIPPET_LIMIT
 
 
 def _collect_snippets(query: str) -> List[str]:
+    if DDGS is None:
+        return []
     snippets: List[str] = []
 
     with DDGS() as ddgs:
